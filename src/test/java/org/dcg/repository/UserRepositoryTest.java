@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
@@ -13,6 +14,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles("test")
 public class UserRepositoryTest {
 
     @Autowired
@@ -30,13 +32,5 @@ public class UserRepositoryTest {
         // then
         assertTrue(found.isPresent());
         assertEquals(found.get().getLogin(), user.getLogin());
-    }
-
-    @Test
-    public void findById() {
-    }
-
-    @Test
-    public void deleteById() {
     }
 }

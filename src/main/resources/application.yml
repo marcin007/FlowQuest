@@ -1,6 +1,6 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/flowquest
-    username: root
-    password: admin
+    username: user
+    password: password
   flyway.enabled: true

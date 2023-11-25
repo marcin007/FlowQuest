@@ -1,0 +1,35 @@
+CREATE TABLE Applications (
+                              ApplicationID INT AUTO_INCREMENT PRIMARY KEY,
+                              ApplicationName VARCHAR(255) NOT NULL,
+                              ApplicationContent TEXT,
+                              State VARCHAR(50) NOT NULL,
+                              CreationDate DATETIME NOT NULL,
+                              PublicationDate DATETIME,
+                              UniqueNumber VARCHAR(255)
+);
+
+CREATE TABLE StateChangeHistory (
+                                    ChangeID INT AUTO_INCREMENT PRIMARY KEY,
+                                    ApplicationID INT NOT NULL,
+                                    PreviousState VARCHAR(50) NOT NULL,
+                                    NewState VARCHAR(50) NOT NULL,
+                                    ChangeDate DATETIME NOT NULL,
+                                    Reason TEXT,
+                                    FOREIGN KEY (ApplicationID) REFERENCES Applications(ApplicationID)
+);
+
+CREATE TABLE Users (
+                       UserID INT AUTO_INCREMENT PRIMARY KEY,
+                       Login VARCHAR(255) NOT NULL UNIQUE,
+                       Password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Logs (
+                      LogID INT AUTO_INCREMENT PRIMARY KEY,
+                      ApplicationID INT NULL,
+                      UserID INT NULL,
+                      ActionDescription TEXT NOT NULL,
+                      DateTime DATETIME NOT NULL,
+                      FOREIGN KEY (ApplicationID) REFERENCES Applications(ApplicationID),
+                      FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);

@@ -1,3 +1,4 @@
+/*
 package org.dcg.repository;
 
 
@@ -13,3 +14,4 @@ public interface StateChangeHistoryRepository extends JpaRepository<StateChangeH
     List<StateChangeHistory> findByApplicationId(Long applicationId);
 
 }
+*/
