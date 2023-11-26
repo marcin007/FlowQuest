@@ -1,13 +1,15 @@
 package org.dcg.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "Logs")
-@Data
 @NoArgsConstructor
 @Builder
 @Getter
