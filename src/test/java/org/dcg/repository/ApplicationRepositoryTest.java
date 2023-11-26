@@ -21,10 +21,18 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class ApplicationRepositoryTest {
 
     @Autowired
+    private StateChangeHistoryRepository stateChangeHistoryRepository;
+
+    @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private LogsRepository logsRepository;
 
     @Before
     public void setUp() throws Exception {
+        logsRepository.deleteAll();
+        stateChangeHistoryRepository.deleteAll();
         applicationRepository.deleteAll();
     }
 

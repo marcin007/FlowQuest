@@ -23,15 +23,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class LogsRepositoryTest {
 
     @Autowired
-    private LogsRepository logsRepository;
+    private StateChangeHistoryRepository stateChangeHistoryRepository;
 
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    @Autowired
+    private LogsRepository logsRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @Before
     public void setUp() throws Exception {
-        logsRepository.deleteAll();
+        userRepository.deleteAll();
+        stateChangeHistoryRepository.deleteAll();
         applicationRepository.deleteAll();
+        logsRepository.deleteAll();
     }
 
     @Test
@@ -44,18 +52,17 @@ public class LogsRepositoryTest {
         Application savedApplication = applicationRepository.save(application);
 
         User user = new User(1L, "login", "pass");
+        User savedUser = userRepository.save(user);
         Logs log = Logs.builder()
                 .application(savedApplication)
                 .actionDescription("Test Action")
                 .dateTime(new Date())
-                .user(user)
+                .user(savedUser)
                 .build();
         logsRepository.save(log);
 
-        // Wykonaj test
         List<Logs> foundLogs = logsRepository.findByApplication_ApplicationId(savedApplication.getApplicationId());
 
-        // Weryfikacja
         assertThat(foundLogs).isNotEmpty();
         assertThat(foundLogs.get(0).getApplication().getApplicationId()).isEqualTo(savedApplication.getApplicationId());
     }

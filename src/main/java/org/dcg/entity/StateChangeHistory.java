@@ -1,10 +1,19 @@
 package org.dcg.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "StateChangeHistory")
+@Builder
+@AllArgsConstructor
+@Getter
+@NoArgsConstructor
 public class StateChangeHistory {
 
     @Id

@@ -23,9 +23,21 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private StateChangeHistoryRepository stateChangeHistoryRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private LogsRepository logsRepository;
+
     @Before
     public void setUp() throws Exception {
+        logsRepository.deleteAll();
+        applicationRepository.deleteAll();
         userRepository.deleteAll();
+        stateChangeHistoryRepository.deleteAll();
     }
 
     @Test
