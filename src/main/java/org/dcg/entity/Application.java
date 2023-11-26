@@ -1,6 +1,8 @@
 package org.dcg.entity;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -9,8 +11,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Applications")
-@Data
 @NoArgsConstructor
+@Builder
+@Getter
+@AllArgsConstructor
 public class Application {
 
     @Id
@@ -37,7 +41,7 @@ public class Application {
     @Column
     private String uniqueNumber;
 
-    @OneToMany(mappedBy = "application")
+    @OneToMany(mappedBy = "application", fetch = FetchType.EAGER)
     private Set<StateChangeHistory> stateChangeHistories;
 
 }
