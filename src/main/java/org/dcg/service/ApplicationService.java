@@ -3,6 +3,7 @@ package org.dcg.service;
 import org.dcg.dto.ApplicationDTO;
 import org.dcg.entity.Application;
 import org.dcg.entity.StateChangeHistory;
+import org.dcg.entity.Status;
 import org.dcg.mapper.ApplicationMapper;
 import org.dcg.repository.ApplicationRepository;
 import org.dcg.repository.StateChangeHistoryRepository;
@@ -25,7 +26,7 @@ public class ApplicationService {
     private ApplicationMapper mapper;
 
     public Application createApplication(ApplicationDTO applicationDTO) {
-        applicationDTO.setState("CREATED");
+        applicationDTO.setState(Status.CREATED.name());
         Application application = mapper.toEntity(applicationDTO);
         return applicationRepository.save(application);
     }
@@ -57,16 +58,8 @@ public class ApplicationService {
             return false;
         }
         Application application = applicationOptional.get();
-        StateChangeHistory stateChangeHistory = StateChangeHistory.builder()
-                .application(application)
-                .previousState(application.getState())
-                .newState("DELETED")
-                .changeDate(new Date())
-                .reason(reason)
-                .build();
-
+        StateChangeHistory stateChangeHistory = buildStateChangeHistory(reason, Status.DELETED, application);
         stateChangeHistoryRepository.save(stateChangeHistory);
-
         applicationRepository.deleteById(id);
         return true;
     }
@@ -79,13 +72,7 @@ public class ApplicationService {
         }
 
         Application application = applicationOptional.get();
-        StateChangeHistory stateChangeHistory = StateChangeHistory.builder()
-                .application(application)
-                .previousState(application.getState())
-                .newState("REJECTED")
-                .changeDate(new Date())
-                .reason(reason)
-                .build();
+        StateChangeHistory stateChangeHistory = buildStateChangeHistory(reason, Status.REJECTED, application);
 
         stateChangeHistoryRepository.save(stateChangeHistory);
 
@@ -93,7 +80,7 @@ public class ApplicationService {
                 .applicationId(application.getApplicationId())
                 .applicationName(application.getApplicationName())
                 .applicationContent(application.getApplicationContent())
-                .state("REJECTED")
+                .state(Status.REJECTED.name())
                 .creationDate(application.getCreationDate())
                 .publicationDate(application.getPublicationDate())
                 .uniqueNumber(application.getUniqueNumber())
@@ -103,9 +90,17 @@ public class ApplicationService {
         return true;
     }
 
-    private static boolean isUpdateAllowed(String currentState) {
-        return "CREATED".equals(currentState) || "VERIFIED".equals(currentState);
+    private static StateChangeHistory buildStateChangeHistory(String reason, Status state, Application application) {
+        return StateChangeHistory.builder()
+                .application(application)
+                .previousState(application.getState())
+                .newState(state.name())
+                .changeDate(new Date())
+                .reason(reason)
+                .build();
     }
 
-
+    private static boolean isUpdateAllowed(String currentState) {
+        return Status.CREATED.name().equals(currentState) || Status.VERIFIED.name().equals(currentState);
+    }
 }
