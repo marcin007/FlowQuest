@@ -16,5 +16,4 @@ public class ApplicationDTO {
     private String state;
     private Date creationDate;
     private String applicationContent;
-
 }

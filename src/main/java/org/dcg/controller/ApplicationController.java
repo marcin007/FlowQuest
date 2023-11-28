@@ -1,6 +1,7 @@
 package org.dcg.controller;
 
 import org.dcg.dto.ApplicationDTO;
+import org.dcg.dto.RejectionDTO;
 import org.dcg.entity.Application;
 import org.dcg.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/applications")
 public class ApplicationController {
 
-
     @Autowired
     private ApplicationService applicationService;
 
@@ -20,17 +20,33 @@ public class ApplicationController {
         if (dto.getApplicationName() == null || dto.getApplicationContent() == null) {
             return ResponseEntity.badRequest().build();
         }
-
         Application savedApplication = applicationService.createApplication(dto);
         return ResponseEntity.ok(savedApplication);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Application> updateApplication(@PathVariable Long id, @RequestBody Application applicationDetails) {
-        return applicationService.updateApplicationContent(id, applicationDetails.getApplicationContent())
+    public ResponseEntity<Application> updateApplication(@PathVariable Long id, @RequestBody ApplicationDTO dto) {
+        return applicationService.updateApplicationContent(id, dto.getApplicationContent())
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteApplication(@PathVariable Long id, @RequestBody RejectionDTO rejectionDTO) {
+        if (rejectionDTO.getReason() == null || rejectionDTO.getReason().trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        boolean isDeleted = applicationService.deleteApplication(id, rejectionDTO.getReason());
+        return isDeleted ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/reject/{id}")
+    public ResponseEntity<Void> rejectApplication(@PathVariable Long id, @RequestBody RejectionDTO rejectionDTO) {
+        if (rejectionDTO.getReason() == null || rejectionDTO.getReason().trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        boolean isRejected = applicationService.rejectApplication(id, rejectionDTO.getReason());
+        return isRejected ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    }
 }
 
