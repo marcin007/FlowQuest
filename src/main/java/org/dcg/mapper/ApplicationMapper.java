@@ -2,6 +2,9 @@ package org.dcg.mapper;
 
 import org.dcg.dto.ApplicationDTO;
 import org.dcg.entity.Application;
+import org.dcg.entity.Status;
+
+import java.util.Date;
 
 public class ApplicationMapper {
 
@@ -11,23 +14,9 @@ public class ApplicationMapper {
         }
 
         return Application.builder()
-                .applicationId(dto.getApplicationId())
                 .applicationName(dto.getApplicationName())
-                .state(dto.getState())
-                .creationDate(dto.getCreationDate())
-                .build();
-    }
-
-    public ApplicationDTO toDTO(Application entity) {
-        if (entity == null) {
-            return null;
-        }
-
-        return ApplicationDTO.builder()
-                .applicationId(entity.getApplicationId())
-                .applicationName(entity.getApplicationName())
-                .state(entity.getState())
-                .creationDate(entity.getCreationDate())
+                .state(Status.CREATED.name())
+                .creationDate(new Date())
                 .build();
     }
 }

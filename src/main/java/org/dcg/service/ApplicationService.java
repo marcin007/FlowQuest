@@ -8,6 +8,8 @@ import org.dcg.mapper.ApplicationMapper;
 import org.dcg.repository.ApplicationRepository;
 import org.dcg.repository.StateChangeHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,12 +27,17 @@ public class ApplicationService {
 
     private ApplicationMapper mapper;
 
+    @Transactional(readOnly = true)
+    public Page<Application> getApplications(String name, String state, Pageable pageable) {
+        return applicationRepository.findByApplicationNameContainingAndState(name, state, pageable);
+    }
+
     public Application createApplication(ApplicationDTO applicationDTO) {
-        applicationDTO.setState(Status.CREATED.name());
         Application application = mapper.toEntity(applicationDTO);
         return applicationRepository.save(application);
     }
 
+    @Transactional
     public Optional<Application> updateApplicationContent(Long id, String newContent) {
         return applicationRepository.findById(id)
                 .map(application -> {

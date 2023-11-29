@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class ApplicationDTO {
-    private String applicationName;
+public class ApplicationUpdateDTO {
+    private Long applicationId;
     private String applicationContent;
 }

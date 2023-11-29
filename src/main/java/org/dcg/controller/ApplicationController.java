@@ -1,10 +1,13 @@
 package org.dcg.controller;
 
 import org.dcg.dto.ApplicationDTO;
+import org.dcg.dto.ApplicationUpdateDTO;
 import org.dcg.dto.RejectionDTO;
 import org.dcg.entity.Application;
 import org.dcg.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +17,13 @@ public class ApplicationController {
 
     @Autowired
     private ApplicationService applicationService;
+
+    @GetMapping
+    public Page<Application> listApplications(@RequestParam(required = false) String name,
+                                              @RequestParam(required = false) String state,
+                                              Pageable pageable) {
+        return applicationService.getApplications(name, state, pageable);
+    }
 
     @PostMapping
     public ResponseEntity<Application> createApplication(@RequestBody ApplicationDTO dto) {
@@ -25,7 +35,7 @@ public class ApplicationController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Application> updateApplication(@PathVariable Long id, @RequestBody ApplicationDTO dto) {
+    public ResponseEntity<Application> updateApplication(@PathVariable Long id, @RequestBody ApplicationUpdateDTO dto) {
         return applicationService.updateApplicationContent(id, dto.getApplicationContent())
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
